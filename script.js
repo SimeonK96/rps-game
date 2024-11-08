@@ -36,18 +36,18 @@ function playRound(playerSelection, computerSelection) {
     let playerScore = 0;
     let computerScore = 0;
   
-    for (let round = 1; round <= 5; round++) {
-      const playerSelection = prompt(`Round ${round}: Enter Rock, Paper, or Scissors:`);
+    for (let i = 0; i < 5; i++) {
+      const playerSelection = prompt(`Round ${i + 1}: Enter Rock, Paper, or Scissors:`);
       const computerSelection = computerPlay();
   
       if (!["rock", "paper", "scissors"].includes(playerSelection.toLowerCase())) {
         alert("Invalid input! You need to enter Rock, Paper, or Scissors. Try again.");
-        round--;
+        i--;
         continue;
       }
   
       const result = playRound(playerSelection, computerSelection);
-      alert(`Round ${round} result: ${result}`);
+      alert(`Round ${i + 1} result: ${result}`);
   
       if (result.includes("Win")) {
         playerScore++;
@@ -68,3 +68,4 @@ function playRound(playerSelection, computerSelection) {
   }
   
   game();
+  
