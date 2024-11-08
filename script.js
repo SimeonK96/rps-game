@@ -38,6 +38,12 @@ function playRound(playerSelection, computerSelection) {
   
     for (let i = 0; i < 5; i++) {
       const playerSelection = prompt(`Round ${i + 1}: Enter Rock, Paper, or Scissors:`);
+
+      if (playerSelection === null) {
+        alert("What's this? Cancelling the game already? I knew you'd be too afraid to face me! Run along, human!");
+        return;
+      }
+
       const computerSelection = computerPlay();
   
       if (!["rock", "paper", "scissors"].includes(playerSelection.toLowerCase())) {
