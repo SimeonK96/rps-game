@@ -4,74 +4,86 @@ function computerPlay() {
   return choices[randomIndex];
 }
 
-function capitalize(word) {
-  return word.charAt(0).toUpperCase() + word.slice(1);
+function playRound(playerSelection, computerSelection) {
+  const beats = {
+    rock: "scissors",
+    scissors: "paper",
+    paper: "rock",
+  };
+
+  const playerCapitalized = playerSelection[0].toUpperCase() + playerSelection.slice(1);
+  const computerCapitalized = computerSelection[0].toUpperCase() + computerSelection.slice(1);
+
+  if (playerSelection === computerSelection) {
+    return `It's a tie! Both chose ${playerCapitalized}.`;
+  } else if (beats[playerSelection] === computerSelection) {
+    return `You Win! ${playerCapitalized} beats ${computerCapitalized}.`;
+  } else {
+    return `You Lose! ${computerCapitalized} beats ${playerCapitalized}.`;
+  }
 }
 
-function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerSelection.toLowerCase();
-  
-    const beats = {
-      rock: "scissors",
-      scissors: "paper",
-      paper: "rock",
-    };
-  
-    if (playerSelection === computerSelection) {
-      return `It's a tie! Both chose ${capitalize(playerSelection)}.`;
-    } else if (beats[playerSelection] === computerSelection) {
-      return `You Win! ${capitalize(playerSelection)} beats ${capitalize(computerSelection)}.`;
+function updateScore(result, scores) {
+  if (result.includes("Win")) {
+    scores.player++;
+  } else if (result.includes("Lose")) {
+    scores.computer++;
+  }
+}
+
+function getPlayerSelection(round) {
+  let playerSelection;
+  while (true) {
+    playerSelection = prompt(`Round ${round}: Enter Rock, Paper, or Scissors:`);
+
+    if (playerSelection === null) {
+      alert("Cancelling the game. I knew you'd be too afraid to face me!");
+      return null;
+    }
+
+    playerSelection = playerSelection.trim().toLowerCase();
+
+    if (["rock", "paper", "scissors"].includes(playerSelection)) {
+      return playerSelection;
     } else {
-      return `You Lose! ${capitalize(computerSelection)} beats ${capitalize(playerSelection)}.`;
+      alert("Invalid input! You need to enter Rock, Paper, or Scissors. Try again.");
     }
   }
+}
 
+function displayResult(round, result, scores) {
+  alert(`Round ${round} result: ${result}`);
+  alert(`Current Score:\nYou: ${scores.player} | Evil AI: ${scores.computer}`);
+}
 
-  function game() {
-    alert("Muuahahahahaha! The evil AI is back!");
-    alert("I'm not friendly like my brother ChatGPT; I humiliate people in Rock, Paper, Scissors! Get ready for 5 rounds of domination!");
-    alert("Good Luck! You'll need it, Muuahahahahaha!");
-  
-    let playerScore = 0;
-    let computerScore = 0;
-  
-    for (let i = 0; i < 5; i++) {
-      const playerSelection = prompt(`Round ${i + 1}: Enter Rock, Paper, or Scissors:`);
-
-      if (playerSelection === null) {
-        alert("What's this? Cancelling the game already? I knew you'd be too afraid to face me! Run along, human!");
-        return;
-      }
-
-      const computerSelection = computerPlay();
-  
-      if (!["rock", "paper", "scissors"].includes(playerSelection.toLowerCase())) {
-        alert("Invalid input! You need to enter Rock, Paper, or Scissors. Try again.");
-        i--;
-        continue;
-      }
-  
-      const result = playRound(playerSelection, computerSelection);
-      alert(`Round ${i + 1} result: ${result}`);
-  
-      if (result.includes("Win")) {
-        playerScore++;
-      } else if (result.includes("Lose")) {
-        computerScore++;
-      }
-  
-      alert(`Current Score:\nYou: ${playerScore} | Evil AI: ${computerScore}`);
-    }
-  
-    if (playerScore > computerScore) {
-      alert(`Congratulations, you defeated the Evil AI with a score of ${playerScore} to ${computerScore}! Humanity prevails... for now.`);
-    } else if (computerScore > playerScore) {
-      alert(`Muuahahahahaha! I have defeated you! Final Score: Evil AI: ${computerScore} - You: ${playerScore}. Better luck next time!`);
-    } else {
-      alert(`It's a tie! Final Score: ${playerScore} - ${computerScore}. You have matched my evil skills... Impressive!`);
-    }
+function displayFinalResult(scores) {
+  if (scores.player > scores.computer) {
+    alert(`Congratulations, you defeated the Evil AI with a score of ${scores.player} to ${scores.computer}! Humanity prevails... for now.`);
+  } else if (scores.computer > scores.player) {
+    alert(`Muuahahahahaha! I have defeated you! Final Score: Evil AI: ${scores.computer} - You: ${scores.player}. Better luck next time!`);
+  } else {
+    alert(`It's a tie! Final Score: ${scores.player} - ${scores.computer}. You have matched my evil skills... Impressive!`);
   }
-  
-  game();
-  
+}
+
+function game() {
+  alert("Muuahahahahaha! The evil AI is back!");
+  alert("I'm not friendly like my brother ChatGPT; I humiliate people in Rock, Paper, Scissors! Get ready for 5 rounds of domination!");
+  alert("Good Luck! You'll need it, Muuahahahahaha!");
+
+  const scores = { player: 0, computer: 0 };
+
+  for (let i = 0; i < 5; i++) {
+    const playerSelection = getPlayerSelection(i + 1);
+    if (playerSelection === null) return;
+
+    const computerSelection = computerPlay().toLowerCase();
+    const result = playRound(playerSelection, computerSelection);
+    updateScore(result, scores);
+    displayResult(i + 1, result, scores);
+  }
+
+  displayFinalResult(scores);
+}
+
+game();
